@@ -1,6 +1,6 @@
 ﻿namespace CommonLib;
 
-public static class FileReader
+public static class CommonLib
 {
     /// <summary>
     /// Reads a file's contents
@@ -79,15 +79,15 @@ public static class FileReader
     /// <param name="input">Input array</param>
     /// <param name="target">Target to remove from the array</param>
     /// <typeparam name="T">Type of the input array and removal target</typeparam>
-    public static void RemoveFromArray<T>(T[] input, T target)
+    public static void RemoveFromArray<T>(T?[] input, T target) where T : IComparable
     {
         for (int i = 0; i < input.Length; i++)
         {
             if (input[i] == null) continue;
             
-            if (input[i]!.Equals(target))
+            if (input[i]!.CompareTo(target) == 0)
             {
-                input[i] = default!;
+                input[i] = default;
             }
         }
     }
@@ -98,7 +98,7 @@ public static class FileReader
     /// <param name="input">Input array</param>
     /// <param name="targets">Target to remove from the array</param>
     /// <typeparam name="T">Type of the input array and removal target</typeparam>
-    public static void RemoveFromArray<T>(T[] input, T[] targets)
+    public static void RemoveFromArray<T>(T?[] input, T[] targets) where T : IComparable
     {
         foreach (T target in targets)
         {
@@ -112,9 +112,9 @@ public static class FileReader
     /// <param name="input">Input array</param>
     /// <param name="target">Target to remove from the array</param>
     /// <typeparam name="T">Type of the input array and removal target</typeparam>
-    public static void RemoveFromArray<T>(T[][] input, T target)
+    public static void RemoveFromArray<T>(T?[][] input, T target) where T : IComparable
     {
-        foreach (T[] row in input)
+        foreach (T?[] row in input)
         {
             RemoveFromArray(row, target);
         }
@@ -126,7 +126,7 @@ public static class FileReader
     /// <param name="input">Input array</param>
     /// <param name="targets">Target to remove from the array</param>
     /// <typeparam name="T">Type of the input array and removal target</typeparam>
-    public static void RemoveFromArray<T>(T[][] input, T[] targets)
+    public static void RemoveFromArray<T>(T?[][] input, T[] targets) where T : IComparable
     {
         foreach (T target in targets)
         {
