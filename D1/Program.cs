@@ -1,14 +1,15 @@
 ﻿using static CommonLib.CommonLib;
 
 var data = ReadFile(args[0]);
-Dictionary<int, int> carrying = new() { { 0, 0 } };
+List<int> carrying = new() { 0 };
 var elfNumber = 0;
 
 foreach (string row in data)
 {
     if (row == "")
     {
-        carrying.Add(++elfNumber, 0);
+        carrying.Add(0);
+        elfNumber++;
     }
     else
     {
@@ -16,10 +17,10 @@ foreach (string row in data)
     }
 }
 
-var first = carrying.AsParallel().MaxBy(e => e.Value);
-carrying[first.Key] = -1;
-var second = carrying.AsParallel().MaxBy(e => e.Value);
-carrying[second.Key] = -1;
-var third = carrying.AsParallel().MaxBy(e => e.Value);
+var copy = new List<int>(carrying);
+copy.Sort();
 
-Console.WriteLine($"{first}\n{second}\n{third}\nTotal: {first.Value + second.Value + third.Value}");
+Console.WriteLine($"{carrying[carrying.IndexOf(copy[^1])]}\n" +
+                  $"{carrying[carrying.IndexOf(copy[^2])]}\n" +
+                  $"{carrying[carrying.IndexOf(copy[^3])]}\n" +
+                  $"Total: {carrying[carrying.IndexOf(copy[^1])] + carrying[carrying.IndexOf(copy[^2])] + carrying[carrying.IndexOf(copy[^3])]}");
