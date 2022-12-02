@@ -28,65 +28,51 @@ const int loss = 0;
 const int draw = 3;
 const int win = 6;
 
-var scoreV1 = 0;
-var scoreV2 = 0;
+var scoreP1 = 0;
+var scoreP2 = 0;
 
 foreach (var row in ReadFileMatrix<char>(args[0], ' ').Select(row => row.ToArray()))
 {
-    if (row[0] == 'A' && row[1] == 'X') 
+    switch (row[0])
     {
-        scoreV1 += draw + rock;
-        scoreV2 += loss + scissors;
-    }
-
-    if (row[0] == 'A' && row[1] == 'Y') 
-    {
-        scoreV1 += win + paper;
-        scoreV2 += draw + rock;
-    }
-
-    if (row[0] == 'A' && row[1] == 'Z') 
-    {
-        scoreV1 += loss + scissors;
-        scoreV2 += win + paper;
-    }
-
-    if (row[0] == 'B' && row[1] == 'X') 
-    {
-        scoreV1 += loss + rock;
-        scoreV2 += loss + rock;
-    }
-
-    if (row[0] == 'B' && row[1] == 'Y') 
-    {
-        scoreV1 += draw + paper;
-        scoreV2 += draw + paper;
-    }
-
-    if (row[0] == 'B' && row[1] == 'Z') 
-    {
-        scoreV1 += win + scissors;
-        scoreV2 += win + scissors;
-    }
-
-    if (row[0] == 'C' && row[1] == 'X') 
-    {
-        scoreV1 += win + rock;
-        scoreV2 += loss + paper;
-    }
-
-    if (row[0] == 'C' && row[1] == 'Y') 
-    {
-        scoreV1 += loss + paper;
-        scoreV2 += draw + scissors;
-    }
-
-    if (row[0] == 'C' && row[1] == 'Z') 
-    {
-        scoreV1 += draw + scissors;
-        scoreV2 += win + rock;
+        case 'A' when row[1] == 'X':
+            scoreP1 += draw + rock;
+            scoreP2 += loss + scissors;
+            break;
+        case 'A' when row[1] == 'Y':
+            scoreP1 += win + paper;
+            scoreP2 += draw + rock;
+            break;
+        case 'A' when row[1] == 'Z':
+            scoreP1 += loss + scissors;
+            scoreP2 += win + paper;
+            break;
+        case 'B' when row[1] == 'X':
+            scoreP1 += loss + rock;
+            scoreP2 += loss + rock;
+            break;
+        case 'B' when row[1] == 'Y':
+            scoreP1 += draw + paper;
+            scoreP2 += draw + paper;
+            break;
+        case 'B' when row[1] == 'Z':
+            scoreP1 += win + scissors;
+            scoreP2 += win + scissors;
+            break;
+        case 'C' when row[1] == 'X':
+            scoreP1 += win + rock;
+            scoreP2 += loss + paper;
+            break;
+        case 'C' when row[1] == 'Y':
+            scoreP1 += loss + paper;
+            scoreP2 += draw + scissors;
+            break;
+        case 'C' when row[1] == 'Z':
+            scoreP1 += draw + scissors;
+            scoreP2 += win + rock;
+            break;
     }
 }
 
-Console.WriteLine($"(Part 1) Final score: {scoreV1}\n" +
-                  $"(Part 2) Final score: {scoreV2}");
+Console.WriteLine($"(Part 1) Final score: {scoreP1}\n" +
+                  $"(Part 2) Final score: {scoreP2}");
