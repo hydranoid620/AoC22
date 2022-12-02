@@ -1,0 +1,4 @@
+this is a
+test of generic
+splitting of strings
+in a file

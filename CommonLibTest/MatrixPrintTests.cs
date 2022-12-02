@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace CommonLibTest;
+﻿namespace CommonLibTest;
 
 [TestClass]
 public class MatrixPrintTests

@@ -6,7 +6,7 @@ public static class CommonLib
     /// <summary>
     /// Reads a file's contents line by line into entries in the List
     /// </summary>
-    /// <param name="filePath">Full path to input file</param>
+    /// <param name="filePath">Absolute path to input file</param>
     /// <returns>List of strings where each line in the file is an entry in the list</returns>
     public static IEnumerable<string> ReadFile(string filePath)
     {
@@ -14,56 +14,39 @@ public static class CommonLib
     }
 
     /// <summary>
-    /// Reads a file's contents and transforms each line into an integer
+    /// Reads rows of data in from a file and returns an IEnumerable of the appropriate data type 
     /// </summary>
-    /// <param name="filePath">Full path to input file</param>
-    /// <returns>A list of integers where each line in the file is a number in the list</returns>
-    public static IEnumerable<int> ReadFileAsInts(string filePath)
+    /// <param name="filePath">Absolute path to input file</param>
+    /// <typeparam name="T">Type to interpret the file's contents as</typeparam>
+    /// <returns>An IEnumerable of T type elements</returns>
+    public static IEnumerable<T> ReadFileColumn<T>(string filePath) where T : IConvertible
     {
-        return ReadFile(filePath).Select(int.Parse).ToList();
+        return ReadFile(filePath).Select(row => (T)Convert.ChangeType(row, typeof(T)));
     }
 
     /// <summary>
-    /// Reads a list of strings from a file and splits each line at a separator, returning a 2D array
+    /// Reads rows of data in from a file and splits each row based on a separator character. Returns an IEnumerable of the appropriate data type 
     /// </summary>
-    /// <param name="filePath">Full path to input file</param>
-    /// <param name="separator">Separator to split each line at. Uses a space by default</param>
-    /// <returns>A 2D list of strings where the first dimension is a line in the file and the second dimension is each word on the line</returns>
-    public static IEnumerable<IEnumerable<string>> ReadListStrings(string filePath, char separator = ' ')
+    /// <param name="filePath">Absolute path to input file</param>
+    /// <param name="separator">Separator character to use for each element. Default is a comma</param>
+    /// <typeparam name="T">Type to interpret the file's contents as</typeparam>
+    /// <returns>An IEnumerable of IEnumerables which contain T type elements</returns>
+    public static IEnumerable<IEnumerable<T>> ReadFileMatrix<T>(string filePath, char separator = ',') where T : IConvertible
     {
-        return ReadFile(filePath).ToList().Select(x => x.Split(separator).AsEnumerable()).AsEnumerable();
+        // Split the rows
+        var matrix = ReadFile(filePath).Select(e => e.Split(separator).AsEnumerable());
+        // Convert the elements
+        return matrix.Select(row => row.Select(element => (T)Convert.ChangeType(element, typeof(T))));
     }
-
-    /// <summary>
-    /// Reads a list of numbers from a file and splits each line at a separator, returning a 2D list
-    /// </summary>
-    /// <param name="filePath">Full path to input file</param>
-    /// <param name="separator">Separator to split each line at. Uses a comma by default</param>
-    /// <returns>A 2D list of integers where the first dimension is a line in the file and the second dimension is the separated row</returns>
-    public static IEnumerable<IEnumerable<int>> ReadListNums(string filePath, char separator = ',')
-    {
-        return ReadFile(filePath).ToList().Select(x => x.Split(separator).Select(int.Parse).AsEnumerable()).AsEnumerable();
-    }
-
-    /// <summary>
-    /// Reads a list of characters from a file and splits each line at a separator, returning a 2D array
-    /// </summary>
-    /// <param name="filePath">Full path to input file</param>
-    /// <param name="separator">Separator to split each line at. Uses a comma by default</param>
-    /// <returns>A 2D list of characters where the first dimension is a line in the file and the second dimension is the separated row</returns>
-    public static IEnumerable<IEnumerable<char>> ReadListChars(string filePath, char separator = ',')
-    {
-        return ReadFile(filePath).ToList().Select(x => x.Split(separator).Select(char.Parse).AsEnumerable()).AsEnumerable();
-    }
-
+    
     /// <summary>
     /// Reads a list of numbers from a file and splits each number into digits, returning a 2D array
     /// </summary>
     /// <param name="filePath">Full path to input file</param>
-    /// <returns>A 2D list of digits where the first dimension is a line in the file and the second dimension is the number, split into individual digits</returns>
-    public static IEnumerable<IEnumerable<int>> ReadListDigits(string filePath)
+    /// <returns>An IEnumerable of IEnumerables containing the individual digits of numbers found in the file</returns>
+    public static IEnumerable<IEnumerable<int>> ReadFileColumnAsDigits(string filePath)
     {
-        return ReadFile(filePath).Select(line => line.Select(c => int.Parse(c.ToString())));
+        return ReadFileColumn<string>(filePath).Select(line => line.Select(c => int.Parse(c.ToString())));
     }
 
     /// <summary>
@@ -88,9 +71,9 @@ public static class CommonLib
     /// <param name="input">Input array</param>
     /// <param name="target">Target to remove from the array</param>
     /// <typeparam name="T">Type of the input array and removal target</typeparam>
-    public static void RemoveFromArray<T>(List<T> input, T target) where T : IComparable
+    public static void RemoveFromArray<T>(IEnumerable<T> input, T target) where T : IComparable
     {
-        input.RemoveAll(e => e.CompareTo(target) == 0);
+        input.ToList().RemoveAll(e => e.CompareTo(target) == 0);
     }
 
     /// <summary>
@@ -99,7 +82,7 @@ public static class CommonLib
     /// <param name="input">Input array</param>
     /// <param name="targets">Target to remove from the array</param>
     /// <typeparam name="T">Type of the input array and removal target</typeparam>
-    public static void RemoveFromArray<T>(List<T> input, IEnumerable<T> targets) where T : IComparable
+    public static void RemoveFromArray<T>(IEnumerable<T> input, IEnumerable<T> targets) where T : IComparable
     {
         foreach (T target in targets)
         {
@@ -113,9 +96,9 @@ public static class CommonLib
     /// <param name="input">Input array</param>
     /// <param name="target">Target to remove from the array</param>
     /// <typeparam name="T">Type of the input array and removal target</typeparam>
-    public static void RemoveFromArray<T>(List<List<T>> input, T target) where T : IComparable
+    public static void RemoveFromArray<T>(IEnumerable<IEnumerable<T>> input, T target) where T : IComparable
     {
-        foreach (List<T> row in input)
+        foreach (IEnumerable<T> row in input)
         {
             RemoveFromArray(row, target);
         }
@@ -127,7 +110,7 @@ public static class CommonLib
     /// <param name="input">Input array</param>
     /// <param name="targets">Target to remove from the array</param>
     /// <typeparam name="T">Type of the input array and removal target</typeparam>
-    public static void RemoveFromArray<T>(List<List<T>> input, IEnumerable<T> targets) where T : IComparable
+    public static void RemoveFromArray<T>(IEnumerable<IEnumerable<T>> input, IEnumerable<T> targets) where T : IComparable
     {
         foreach (T target in targets)
         {
