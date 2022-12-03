@@ -6,8 +6,8 @@ var prioritiesSum = input
                  .Select(x => x.Chunk(x.Length / 2))
                  .Select(row =>
                  {
-                     var rowList = row.ToList();
-                     return rowList.First().Intersect(rowList.Last()).First();
+                     var rowList = row.ToArray();
+                     return rowList[0].Intersect(rowList[1]).First();
                  })
                  .Select(c => char.IsLower(c) ? c - 96 : c - 38)
                  .Sum();
