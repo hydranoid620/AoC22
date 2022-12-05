@@ -37,7 +37,5 @@ foreach (string instruction in input.SkipWhile(x => !x.StartsWith("move")))
     cratesList.ElementAt(source).RemoveRange(cratesList.ElementAt(source).Count - numberOfMoves, numberOfMoves);
 }
 
-Console.Write("Part 1: ");
-foreach (Stack<char> stack in cratesStack) Console.Write(stack.Peek());
-Console.Write("\nPart 2: ");
-foreach (List<char> list in cratesList) Console.Write(list.Last());
+Console.WriteLine($"Part 1: {cratesStack.Select(x => x.Peek()).Aggregate("", (s, c) => s + c)}");
+Console.WriteLine($"Part 2: {cratesList.Select(x => x.Last()).Aggregate("", (s, c) => s + c)}");
