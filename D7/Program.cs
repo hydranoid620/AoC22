@@ -1,4 +1,5 @@
-﻿using static CommonLib.CommonLib;
+﻿using D7;
+using static CommonLib.CommonLib;
 
 const int MAX_FOLDER_SIZE = 100000;
 const int TOTAL_DISK_SPACE = 70000000;
@@ -25,74 +26,23 @@ foreach (var line in input)
 }
 
 currentNode = rootNode;
-
-// Part 1
 var sizeTotal = 0;
+FolderNode directoryToDelete = rootNode;
+
 var currentNodes = currentNode.Children.Where(node => node is FolderNode).Cast<FolderNode>().ToList();
 var nextNodes = new List<FolderNode>();
 while (currentNodes.Count > 0)
 {
     foreach (FolderNode node in currentNodes)
     {
-        if (node.Size <= MAX_FOLDER_SIZE) sizeTotal += node.Size;
+        if (node.Size <= MAX_FOLDER_SIZE) sizeTotal += node.Size; // Part 1
+        if (TOTAL_DISK_SPACE - rootNode.Size + node.Size >= REQUIRED_DISK_SPACE && node.Size < directoryToDelete.Size) directoryToDelete = node; // Part 2
         nextNodes.AddRange(node.Children.Where(n => n is FolderNode).Cast<FolderNode>().ToList());
     }
 
     currentNodes = nextNodes.Select(x => x).ToList();
     nextNodes.Clear();
 }
+
 Console.WriteLine(sizeTotal);
-
-// Part 2
-FolderNode directoryToDelete = rootNode;
-currentNodes = currentNode.Children.Where(node => node is FolderNode).Cast<FolderNode>().ToList();
-nextNodes.Clear();
-while (currentNodes.Count > 0)
-{
-    foreach (FolderNode node in currentNodes)
-    {
-        if (TOTAL_DISK_SPACE - rootNode.Size + node.Size >= REQUIRED_DISK_SPACE && node.Size < directoryToDelete.Size) directoryToDelete = node;
-        nextNodes.AddRange(node.Children.Where(n => n is FolderNode).Cast<FolderNode>().ToList());
-    }
-
-    currentNodes = nextNodes.Select(x => x).ToList();
-    nextNodes.Clear();
-}
 Console.WriteLine(directoryToDelete.Size);
-
-internal class Node
-{
-    public FolderNode? Parent { get; }
-    public int Size { get; private set; }
-    public string Name { get; }
-
-    internal Node(FolderNode? parent, int size, string name)
-    {
-        Parent = parent;
-        AddSize(size);
-        Name = name;
-    }
-
-    private void AddSize(int size)
-    {
-        Size += size;
-        Parent?.AddSize(size);
-    }
-}
-
-internal class FileNode : Node
-{
-    public FileNode(FolderNode? parent, int size, string name) : base(parent, size, name)
-    {
-    }
-}
-
-internal class FolderNode : Node
-{
-    public List<Node> Children { get; }
-
-    public FolderNode(FolderNode? parent, string name) : base(parent, 0, name)
-    {
-        Children = new List<Node>();
-    }
-}
