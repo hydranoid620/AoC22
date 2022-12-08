@@ -6,7 +6,7 @@ int length = input.Length;
 int width = input[0].Length;
 bool IsInBounds(int x, int y) => x > 0 && y > 0 && x < length - 1 && y < width - 1;
 
-int[][] visibleTreesArray = Enumerable.Range(0, length).Select(y => Enumerable.Range(0, width).Select(x => -1).ToArray()).ToArray();
+int[][] visibleTreesArray = Enumerable.Range(0, length).Select(_ => Enumerable.Range(0, width).Select(_ => -1).ToArray()).ToArray();
 
 for (var colIndex = 0; colIndex < input.Length; colIndex++)
 {
@@ -72,7 +72,7 @@ for (var i = 0; i < length; i++)
 Console.WriteLine($"(Part 1) Visible trees: {visibleTreesCount}");
 
 
-int[][] scenicScoreArray = Enumerable.Range(0, length).Select(y => Enumerable.Range(0, width).Select(x => 0).ToArray()).ToArray();
+int[][] scenicScoreArray = Enumerable.Range(0, length).Select(_ => Enumerable.Range(0, width).Select(_ => 0).ToArray()).ToArray();
 for (var i = 1; i < length - 1; i++)
 {
     for (var j = 1; j < width - 1; j++)
