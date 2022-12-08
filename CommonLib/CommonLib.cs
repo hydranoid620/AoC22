@@ -44,7 +44,7 @@ public static class CommonLib
     /// </summary>
     /// <param name="filePath">Full path to input file</param>
     /// <returns>An IEnumerable of IEnumerables containing the individual digits of numbers found in the file</returns>
-    public static IEnumerable<IEnumerable<int>> ReadFileColumnAsDigits(string filePath)
+    public static IEnumerable<IEnumerable<int>> ReadFileMatrixDigits(string filePath)
     {
         return ReadFileColumn<string>(filePath).Select(line => line.Select(c => int.Parse(c.ToString())));
     }
@@ -52,15 +52,32 @@ public static class CommonLib
     /// <summary>
     /// Prints a 2D array (matrix) of strings
     /// </summary>
-    /// <param name="matrix">2D array (matrix) to print</param>
+    /// <param name="matrix">2D array of Lists to print</param>
     public static void PrintMatrix<T>(List<List<T>> matrix)
     {
-        foreach (List<T> t in matrix)
+        foreach (List<T> row in matrix)
         {
             for (int j = 0; j < matrix.Count; j++)
             {
+                Console.Write(row[j] + "\t");
+            }
+            Console.WriteLine();
+        }
+    }
+
+    /// <summary>
+    /// Prints a 2D array (matrix) of strings
+    /// </summary>
+    /// <param name="matrix">2D array to print</param>
+    public static void PrintMatrix<T>(T[][] matrix)
+    {
+        foreach (var t in matrix)
+        {
+            for (int j = 0; j < matrix.Length; j++)
+            {
                 Console.Write(t[j] + "\t");
             }
+
             Console.WriteLine();
         }
     }

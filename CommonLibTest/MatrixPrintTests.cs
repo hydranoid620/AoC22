@@ -28,7 +28,7 @@ public class MatrixPrintTests
 
         StringWriter stringWriter = new();
         Console.SetOut(stringWriter);
-        PrintMatrix(data);
+        MatrixToString(data);
         Assert.AreEqual(expected, stringWriter.ToString());
     }
 
@@ -56,7 +56,7 @@ public class MatrixPrintTests
 
             StringWriter stringWriter = new();
             Console.SetOut(stringWriter);
-            PrintMatrix(data);
+            MatrixToString(data);
             Assert.AreEqual(expected, stringWriter.ToString());
         }
     }
@@ -85,7 +85,7 @@ public class MatrixPrintTests
 
             StringWriter stringWriter = new();
             Console.SetOut(stringWriter);
-            PrintMatrix(data);
+            MatrixToString(data);
             Assert.AreEqual(expected, stringWriter.ToString());
         }
     }
